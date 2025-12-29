@@ -1,21 +1,36 @@
 package function
 
 import (
-	"encoding/json"
+	"context"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 )
 
 func init() {
-    // This connects the name 'WorkoutAPI' to this function
 	functions.HTTP("WorkoutAPI", WorkoutAPI)
 }
 
-// WorkoutAPI is the entry point
+// setCORSHeaders sets the CORS headers for all responses
+func setCORSHeaders(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, x-api-key")
+}
+
+// WorkoutAPI is the entry point for the Cloud Function
 func WorkoutAPI(w http.ResponseWriter, r *http.Request) {
-    // 1. Simple Auth Check
+	setCORSHeaders(w)
+
+	// Handle preflight requests
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	// Auth check
 	clientKey := r.Header.Get("x-api-key")
 	serverKey := os.Getenv("APP_SECRET_PASSWORD")
 
@@ -24,10 +39,44 @@ func WorkoutAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    // 2. Success Response
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"status": "authorized", 
-		"message": "Hello from Go!",
-	})
+	// Get Firestore client
+	ctx := context.Background()
+	projectID := os.Getenv("GCP_PROJECT_ID")
+	if projectID == "" {
+		projectID = os.Getenv("GOOGLE_CLOUD_PROJECT") // Fallback for Cloud Functions
+	}
+
+	client, err := GetFirestoreClient(ctx, projectID)
+	if err != nil {
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		return
+	}
+
+	// Route requests
+	path := r.URL.Path
+	method := r.Method
+
+	// /indoor_sessions routes
+	if strings.HasPrefix(path, "/indoor_sessions") {
+		sessionID := ParseSessionID(path)
+
+		switch {
+		case method == "GET" && sessionID == "":
+			ListIndoorSessions(w, r, client)
+		case method == "GET" && sessionID != "":
+			GetIndoorSession(w, r, client, sessionID)
+		case method == "POST" && sessionID == "":
+			CreateIndoorSession(w, r, client)
+		case method == "PUT" && sessionID != "":
+			UpdateIndoorSession(w, r, client, sessionID)
+		case method == "DELETE" && sessionID != "":
+			DeleteIndoorSession(w, r, client, sessionID)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		return
+	}
+
+	// Default: not found
+	http.Error(w, "Not found", http.StatusNotFound)
 }
