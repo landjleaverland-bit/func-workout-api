@@ -19,7 +19,12 @@ type IndoorSession struct {
 	Location       string       `json:"location" firestore:"location"`
 	CustomLocation string       `json:"customLocation,omitempty" firestore:"customLocation,omitempty"`
 	ClimbingType   string       `json:"climbingType" firestore:"climbingType"`
-	SessionType    string       `json:"sessionType" firestore:"sessionType"`
+	TrainingType   string       `json:"trainingType" firestore:"trainingType"`
+	Difficulty     string       `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
+	Category       string       `json:"category,omitempty" firestore:"category,omitempty"`
+	EnergySystem   string       `json:"energySystem,omitempty" firestore:"energySystem,omitempty"`
+	TechniqueFocus string       `json:"techniqueFocus,omitempty" firestore:"techniqueFocus,omitempty"`
+	WallAngle      string       `json:"wallAngle,omitempty" firestore:"wallAngle,omitempty"`
 	FingerLoad     int          `json:"fingerLoad" firestore:"fingerLoad"`
 	ShoulderLoad   int          `json:"shoulderLoad" firestore:"shoulderLoad"`
 	ForearmLoad    int          `json:"forearmLoad" firestore:"forearmLoad"`
@@ -34,7 +39,12 @@ type IndoorSessionInput struct {
 	Location       string       `json:"location"`
 	CustomLocation string       `json:"customLocation,omitempty"`
 	ClimbingType   string       `json:"climbingType"`
-	SessionType    string       `json:"sessionType"`
+	TrainingType   string       `json:"trainingType"`
+	Difficulty     string       `json:"difficulty,omitempty"`
+	Category       string       `json:"category,omitempty"`
+	EnergySystem   string       `json:"energySystem,omitempty"`
+	TechniqueFocus string       `json:"techniqueFocus,omitempty"`
+	WallAngle      string       `json:"wallAngle,omitempty"`
 	FingerLoad     int          `json:"fingerLoad"`
 	ShoulderLoad   int          `json:"shoulderLoad"`
 	ForearmLoad    int          `json:"forearmLoad"`
