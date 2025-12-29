@@ -50,3 +50,42 @@ type IndoorSessionInput struct {
 	ForearmLoad    int          `json:"forearmLoad"`
 	Climbs         []ClimbEntry `json:"climbs"`
 }
+
+// OutdoorSession represents an outdoor climbing session
+type OutdoorSession struct {
+	ID             string       `json:"id" firestore:"-"`
+	Date           string       `json:"date" firestore:"date"`
+	Area           string       `json:"area" firestore:"area"`
+	Crag           string       `json:"crag" firestore:"crag"`
+	Sector         string       `json:"sector,omitempty" firestore:"sector,omitempty"`
+	ClimbingType   string       `json:"climbingType" firestore:"climbingType"`
+	TrainingType   string       `json:"trainingType" firestore:"trainingType"`
+	Difficulty     string       `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
+	Category       string       `json:"category,omitempty" firestore:"category,omitempty"`
+	EnergySystem   string       `json:"energySystem,omitempty" firestore:"energySystem,omitempty"`
+	TechniqueFocus string       `json:"techniqueFocus,omitempty" firestore:"techniqueFocus,omitempty"`
+	FingerLoad     int          `json:"fingerLoad" firestore:"fingerLoad"`
+	ShoulderLoad   int          `json:"shoulderLoad" firestore:"shoulderLoad"`
+	ForearmLoad    int          `json:"forearmLoad" firestore:"forearmLoad"`
+	Climbs         []ClimbEntry `json:"climbs" firestore:"climbs"`
+	CreatedAt      time.Time    `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt      time.Time    `json:"updatedAt" firestore:"updatedAt"`
+}
+
+// OutdoorSessionInput is used for create/update outdoor session requests
+type OutdoorSessionInput struct {
+	Date           string       `json:"date"`
+	Area           string       `json:"area"`
+	Crag           string       `json:"crag"`
+	Sector         string       `json:"sector,omitempty"`
+	ClimbingType   string       `json:"climbingType"`
+	TrainingType   string       `json:"trainingType"`
+	Difficulty     string       `json:"difficulty,omitempty"`
+	Category       string       `json:"category,omitempty"`
+	EnergySystem   string       `json:"energySystem,omitempty"`
+	TechniqueFocus string       `json:"techniqueFocus,omitempty"`
+	FingerLoad     int          `json:"fingerLoad"`
+	ShoulderLoad   int          `json:"shoulderLoad"`
+	ForearmLoad    int          `json:"forearmLoad"`
+	Climbs         []ClimbEntry `json:"climbs"`
+}

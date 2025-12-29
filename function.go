@@ -77,6 +77,27 @@ func WorkoutAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// /outdoor_sessions routes
+	if strings.HasPrefix(path, "/outdoor_sessions") {
+		sessionID := ParseOutdoorSessionID(path)
+
+		switch {
+		case method == "GET" && sessionID == "":
+			ListOutdoorSessions(w, r, client)
+		case method == "GET" && sessionID != "":
+			GetOutdoorSession(w, r, client, sessionID)
+		case method == "POST" && sessionID == "":
+			CreateOutdoorSession(w, r, client)
+		case method == "PUT" && sessionID != "":
+			UpdateOutdoorSession(w, r, client, sessionID)
+		case method == "DELETE" && sessionID != "":
+			DeleteOutdoorSession(w, r, client, sessionID)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		return
+	}
+
 	// Default: not found
 	http.Error(w, "Not found", http.StatusNotFound)
 }

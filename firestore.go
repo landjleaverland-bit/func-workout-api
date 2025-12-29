@@ -8,9 +8,12 @@ import (
 )
 
 const (
-	// Database and collection names
-	DatabaseID     = "climbing-tracker-db"
-	CollectionName = "Indoor_Climbs"
+	// Database name
+	DatabaseID = "climbing-tracker-db"
+
+	// Collection names
+	IndoorCollection  = "Indoor_Climbs"
+	OutdoorCollection = "Outdoor_Climbs"
 )
 
 var (
@@ -27,7 +30,12 @@ func GetFirestoreClient(ctx context.Context, projectID string) (*firestore.Clien
 	return firestoreClient, clientErr
 }
 
-// GetCollection returns the Indoor_Climbs collection reference
+// GetCollection returns the Indoor_Climbs collection reference (legacy support)
 func GetCollection(client *firestore.Client) *firestore.CollectionRef {
-	return client.Collection(CollectionName)
+	return client.Collection(IndoorCollection)
+}
+
+// GetCollectionByName returns a collection reference by name
+func GetCollectionByName(client *firestore.Client, name string) *firestore.CollectionRef {
+	return client.Collection(name)
 }
