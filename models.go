@@ -28,6 +28,11 @@ type IndoorSession struct {
 	FingerLoad       int          `json:"fingerLoad" firestore:"fingerLoad"`
 	ShoulderLoad     int          `json:"shoulderLoad" firestore:"shoulderLoad"`
 	ForearmLoad      int          `json:"forearmLoad" firestore:"forearmLoad"`
+	OpenGrip         int          `json:"openGrip" firestore:"openGrip"`
+	CrimpGrip        int          `json:"crimpGrip" firestore:"crimpGrip"`
+	PinchGrip        int          `json:"pinchGrip" firestore:"pinchGrip"`
+	SloperGrip       int          `json:"sloperGrip" firestore:"sloperGrip"`
+	JugGrip          int          `json:"jugGrip" firestore:"jugGrip"`
 	Climbs           []ClimbEntry `json:"climbs" firestore:"climbs"`
 	CreatedAt        time.Time    `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt        time.Time    `json:"updatedAt" firestore:"updatedAt"`
@@ -48,6 +53,11 @@ type IndoorSessionInput struct {
 	FingerLoad       int          `json:"fingerLoad"`
 	ShoulderLoad     int          `json:"shoulderLoad"`
 	ForearmLoad      int          `json:"forearmLoad"`
+	OpenGrip         int          `json:"openGrip"`
+	CrimpGrip        int          `json:"crimpGrip"`
+	PinchGrip        int          `json:"pinchGrip"`
+	SloperGrip       int          `json:"sloperGrip"`
+	JugGrip          int          `json:"jugGrip"`
 	Climbs           []ClimbEntry `json:"climbs"`
 }
 
@@ -67,6 +77,11 @@ type OutdoorSession struct {
 	FingerLoad       int          `json:"fingerLoad" firestore:"fingerLoad"`
 	ShoulderLoad     int          `json:"shoulderLoad" firestore:"shoulderLoad"`
 	ForearmLoad      int          `json:"forearmLoad" firestore:"forearmLoad"`
+	OpenGrip         int          `json:"openGrip" firestore:"openGrip"`
+	CrimpGrip        int          `json:"crimpGrip" firestore:"crimpGrip"`
+	PinchGrip        int          `json:"pinchGrip" firestore:"pinchGrip"`
+	SloperGrip       int          `json:"sloperGrip" firestore:"sloperGrip"`
+	JugGrip          int          `json:"jugGrip" firestore:"jugGrip"`
 	Climbs           []ClimbEntry `json:"climbs" firestore:"climbs"`
 	CreatedAt        time.Time    `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt        time.Time    `json:"updatedAt" firestore:"updatedAt"`
@@ -87,6 +102,11 @@ type OutdoorSessionInput struct {
 	FingerLoad       int          `json:"fingerLoad"`
 	ShoulderLoad     int          `json:"shoulderLoad"`
 	ForearmLoad      int          `json:"forearmLoad"`
+	OpenGrip         int          `json:"openGrip"`
+	CrimpGrip        int          `json:"crimpGrip"`
+	PinchGrip        int          `json:"pinchGrip"`
+	SloperGrip       int          `json:"sloperGrip"`
+	JugGrip          int          `json:"jugGrip"`
 	Climbs           []ClimbEntry `json:"climbs"`
 }
 
