@@ -98,6 +98,48 @@ func WorkoutAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// /fingerboard_sessions routes
+	if strings.HasPrefix(path, "/fingerboard_sessions") {
+		sessionID := ParseFingerboardSessionID(path)
+
+		switch {
+		case method == "GET" && sessionID == "":
+			ListFingerboardSessions(w, r, client)
+		case method == "GET" && sessionID != "":
+			GetFingerboardSession(w, r, client, sessionID)
+		case method == "POST" && sessionID == "":
+			CreateFingerboardSession(w, r, client)
+		case method == "PUT" && sessionID != "":
+			UpdateFingerboardSession(w, r, client, sessionID)
+		case method == "DELETE" && sessionID != "":
+			DeleteFingerboardSession(w, r, client, sessionID)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		return
+	}
+
+	// /competition_sessions routes
+	if strings.HasPrefix(path, "/competition_sessions") {
+		sessionID := ParseCompetitionSessionID(path)
+
+		switch {
+		case method == "GET" && sessionID == "":
+			ListCompetitionSessions(w, r, client)
+		case method == "GET" && sessionID != "":
+			GetCompetitionSession(w, r, client, sessionID)
+		case method == "POST" && sessionID == "":
+			CreateCompetitionSession(w, r, client)
+		case method == "PUT" && sessionID != "":
+			UpdateCompetitionSession(w, r, client, sessionID)
+		case method == "DELETE" && sessionID != "":
+			DeleteCompetitionSession(w, r, client, sessionID)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		return
+	}
+
 	// Default: not found
 	http.Error(w, "Not found", http.StatusNotFound)
 }
