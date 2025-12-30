@@ -14,80 +14,80 @@ type ClimbEntry struct {
 
 // IndoorSession represents an indoor climbing session
 type IndoorSession struct {
-	ID             string       `json:"id" firestore:"-"`
-	Date           string       `json:"date" firestore:"date"`
-	Location       string       `json:"location" firestore:"location"`
-	CustomLocation string       `json:"customLocation,omitempty" firestore:"customLocation,omitempty"`
-	ClimbingType   string       `json:"climbingType" firestore:"climbingType"`
-	TrainingType   string       `json:"trainingType" firestore:"trainingType"`
-	Difficulty     string       `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
-	Category       string       `json:"category,omitempty" firestore:"category,omitempty"`
-	EnergySystem   string       `json:"energySystem,omitempty" firestore:"energySystem,omitempty"`
-	TechniqueFocus string       `json:"techniqueFocus,omitempty" firestore:"techniqueFocus,omitempty"`
-	WallAngle      string       `json:"wallAngle,omitempty" firestore:"wallAngle,omitempty"`
-	FingerLoad     int          `json:"fingerLoad" firestore:"fingerLoad"`
-	ShoulderLoad   int          `json:"shoulderLoad" firestore:"shoulderLoad"`
-	ForearmLoad    int          `json:"forearmLoad" firestore:"forearmLoad"`
-	Climbs         []ClimbEntry `json:"climbs" firestore:"climbs"`
-	CreatedAt      time.Time    `json:"createdAt" firestore:"createdAt"`
-	UpdatedAt      time.Time    `json:"updatedAt" firestore:"updatedAt"`
+	ID               string       `json:"id" firestore:"-"`
+	Date             string       `json:"date" firestore:"date"`
+	Location         string       `json:"location" firestore:"location"`
+	CustomLocation   string       `json:"customLocation,omitempty" firestore:"customLocation,omitempty"`
+	ClimbingType     string       `json:"climbingType" firestore:"climbingType"`
+	TrainingTypes    []string     `json:"trainingTypes" firestore:"trainingTypes"`
+	Difficulty       string       `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
+	Categories       []string     `json:"categories,omitempty" firestore:"categories,omitempty"`
+	EnergySystems    []string     `json:"energySystems,omitempty" firestore:"energySystems,omitempty"`
+	TechniqueFocuses []string     `json:"techniqueFocuses,omitempty" firestore:"techniqueFocuses,omitempty"`
+	WallAngles       []string     `json:"wallAngles,omitempty" firestore:"wallAngles,omitempty"`
+	FingerLoad       int          `json:"fingerLoad" firestore:"fingerLoad"`
+	ShoulderLoad     int          `json:"shoulderLoad" firestore:"shoulderLoad"`
+	ForearmLoad      int          `json:"forearmLoad" firestore:"forearmLoad"`
+	Climbs           []ClimbEntry `json:"climbs" firestore:"climbs"`
+	CreatedAt        time.Time    `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt        time.Time    `json:"updatedAt" firestore:"updatedAt"`
 }
 
 // IndoorSessionInput is used for create/update requests (no ID/timestamps)
 type IndoorSessionInput struct {
-	Date           string       `json:"date"`
-	Location       string       `json:"location"`
-	CustomLocation string       `json:"customLocation,omitempty"`
-	ClimbingType   string       `json:"climbingType"`
-	TrainingType   string       `json:"trainingType"`
-	Difficulty     string       `json:"difficulty,omitempty"`
-	Category       string       `json:"category,omitempty"`
-	EnergySystem   string       `json:"energySystem,omitempty"`
-	TechniqueFocus string       `json:"techniqueFocus,omitempty"`
-	WallAngle      string       `json:"wallAngle,omitempty"`
-	FingerLoad     int          `json:"fingerLoad"`
-	ShoulderLoad   int          `json:"shoulderLoad"`
-	ForearmLoad    int          `json:"forearmLoad"`
-	Climbs         []ClimbEntry `json:"climbs"`
+	Date             string       `json:"date"`
+	Location         string       `json:"location"`
+	CustomLocation   string       `json:"customLocation,omitempty"`
+	ClimbingType     string       `json:"climbingType"`
+	TrainingTypes    []string     `json:"trainingTypes"`
+	Difficulty       string       `json:"difficulty,omitempty"`
+	Categories       []string     `json:"categories,omitempty"`
+	EnergySystems    []string     `json:"energySystems,omitempty"`
+	TechniqueFocuses []string     `json:"techniqueFocuses,omitempty"`
+	WallAngles       []string     `json:"wallAngles,omitempty"`
+	FingerLoad       int          `json:"fingerLoad"`
+	ShoulderLoad     int          `json:"shoulderLoad"`
+	ForearmLoad      int          `json:"forearmLoad"`
+	Climbs           []ClimbEntry `json:"climbs"`
 }
 
 // OutdoorSession represents an outdoor climbing session
 type OutdoorSession struct {
-	ID             string       `json:"id" firestore:"-"`
-	Date           string       `json:"date" firestore:"date"`
-	Area           string       `json:"area" firestore:"area"`
-	Crag           string       `json:"crag" firestore:"crag"`
-	Sector         string       `json:"sector,omitempty" firestore:"sector,omitempty"`
-	ClimbingType   string       `json:"climbingType" firestore:"climbingType"`
-	TrainingType   string       `json:"trainingType" firestore:"trainingType"`
-	Difficulty     string       `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
-	Category       string       `json:"category,omitempty" firestore:"category,omitempty"`
-	EnergySystem   string       `json:"energySystem,omitempty" firestore:"energySystem,omitempty"`
-	TechniqueFocus string       `json:"techniqueFocus,omitempty" firestore:"techniqueFocus,omitempty"`
-	FingerLoad     int          `json:"fingerLoad" firestore:"fingerLoad"`
-	ShoulderLoad   int          `json:"shoulderLoad" firestore:"shoulderLoad"`
-	ForearmLoad    int          `json:"forearmLoad" firestore:"forearmLoad"`
-	Climbs         []ClimbEntry `json:"climbs" firestore:"climbs"`
-	CreatedAt      time.Time    `json:"createdAt" firestore:"createdAt"`
-	UpdatedAt      time.Time    `json:"updatedAt" firestore:"updatedAt"`
+	ID               string       `json:"id" firestore:"-"`
+	Date             string       `json:"date" firestore:"date"`
+	Area             string       `json:"area" firestore:"area"`
+	Crag             string       `json:"crag" firestore:"crag"`
+	Sector           string       `json:"sector,omitempty" firestore:"sector,omitempty"`
+	ClimbingType     string       `json:"climbingType" firestore:"climbingType"`
+	TrainingTypes    []string     `json:"trainingTypes" firestore:"trainingTypes"`
+	Difficulty       string       `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
+	Categories       []string     `json:"categories,omitempty" firestore:"categories,omitempty"`
+	EnergySystems    []string     `json:"energySystems,omitempty" firestore:"energySystems,omitempty"`
+	TechniqueFocuses []string     `json:"techniqueFocuses,omitempty" firestore:"techniqueFocuses,omitempty"`
+	FingerLoad       int          `json:"fingerLoad" firestore:"fingerLoad"`
+	ShoulderLoad     int          `json:"shoulderLoad" firestore:"shoulderLoad"`
+	ForearmLoad      int          `json:"forearmLoad" firestore:"forearmLoad"`
+	Climbs           []ClimbEntry `json:"climbs" firestore:"climbs"`
+	CreatedAt        time.Time    `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt        time.Time    `json:"updatedAt" firestore:"updatedAt"`
 }
 
 // OutdoorSessionInput is used for create/update outdoor session requests
 type OutdoorSessionInput struct {
-	Date           string       `json:"date"`
-	Area           string       `json:"area"`
-	Crag           string       `json:"crag"`
-	Sector         string       `json:"sector,omitempty"`
-	ClimbingType   string       `json:"climbingType"`
-	TrainingType   string       `json:"trainingType"`
-	Difficulty     string       `json:"difficulty,omitempty"`
-	Category       string       `json:"category,omitempty"`
-	EnergySystem   string       `json:"energySystem,omitempty"`
-	TechniqueFocus string       `json:"techniqueFocus,omitempty"`
-	FingerLoad     int          `json:"fingerLoad"`
-	ShoulderLoad   int          `json:"shoulderLoad"`
-	ForearmLoad    int          `json:"forearmLoad"`
-	Climbs         []ClimbEntry `json:"climbs"`
+	Date             string       `json:"date"`
+	Area             string       `json:"area"`
+	Crag             string       `json:"crag"`
+	Sector           string       `json:"sector,omitempty"`
+	ClimbingType     string       `json:"climbingType"`
+	TrainingTypes    []string     `json:"trainingTypes"`
+	Difficulty       string       `json:"difficulty,omitempty"`
+	Categories       []string     `json:"categories,omitempty"`
+	EnergySystems    []string     `json:"energySystems,omitempty"`
+	TechniqueFocuses []string     `json:"techniqueFocuses,omitempty"`
+	FingerLoad       int          `json:"fingerLoad"`
+	ShoulderLoad     int          `json:"shoulderLoad"`
+	ForearmLoad      int          `json:"forearmLoad"`
+	Climbs           []ClimbEntry `json:"climbs"`
 }
 
 // Fingerboard Exercise Details
