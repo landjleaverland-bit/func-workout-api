@@ -12,8 +12,10 @@ const (
 	DatabaseID = "climbing-tracker-db"
 
 	// Collection names
-	IndoorCollection  = "Indoor_Climbs"
-	OutdoorCollection = "Outdoor_Climbs"
+	IndoorCollection      = "Indoor_Climbs"
+	OutdoorCollection     = "Outdoor_Climbs"
+	FingerboardCollection = "Fingerboarding"
+	CompetitionCollection = "Competitions"
 )
 
 var (

@@ -389,3 +389,270 @@ func DeleteOutdoorSession(w http.ResponseWriter, r *http.Request, client *firest
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// ParseFingerboardSessionID extracts the session ID from path like /fingerboard_sessions/{id}
+func ParseFingerboardSessionID(path string) string {
+	parts := strings.Split(strings.TrimPrefix(path, "/"), "/")
+	if len(parts) >= 2 && parts[0] == "fingerboard_sessions" {
+		return parts[1]
+	}
+	return ""
+}
+
+// ListFingerboardSessions
+func ListFingerboardSessions(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
+	ctx := context.Background()
+	col := GetCollectionByName(client, FingerboardCollection)
+
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	query := col.OrderBy("date", firestore.Desc)
+	if startDate != "" {
+		query = query.Where("date", ">=", startDate)
+	}
+	if endDate != "" {
+		query = query.Where("date", "<=", endDate)
+	}
+
+	iter := query.Documents(ctx)
+	defer iter.Stop()
+	var sessions []FingerboardSession
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			http.Error(w, "Failed to fetch", http.StatusInternalServerError)
+			return
+		}
+		var s FingerboardSession
+		if err := doc.DataTo(&s); err == nil {
+			s.ID = doc.Ref.ID
+			sessions = append(sessions, s)
+		}
+	}
+	if sessions == nil {
+		sessions = []FingerboardSession{}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sessions)
+}
+
+// GetFingerboardSession
+func GetFingerboardSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	doc, err := GetCollectionByName(client, FingerboardCollection).Doc(id).Get(ctx)
+	if err != nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+	var s FingerboardSession
+	if err := doc.DataTo(&s); err != nil {
+		http.Error(w, "Parse error", http.StatusInternalServerError)
+		return
+	}
+	s.ID = doc.Ref.ID
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(s)
+}
+
+// CreateFingerboardSession
+func CreateFingerboardSession(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
+	ctx := context.Background()
+	var input FingerboardSessionInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid body", http.StatusBadRequest)
+		return
+	}
+
+	now := time.Now()
+	s := FingerboardSession{
+		Date: input.Date, Location: input.Location, Exercises: input.Exercises, CreatedAt: now, UpdatedAt: now,
+	}
+	docRef, _, err := GetCollectionByName(client, FingerboardCollection).Add(ctx, s)
+	if err != nil {
+		http.Error(w, "Failed to create", http.StatusInternalServerError)
+		return
+	}
+	s.ID = docRef.ID
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(s)
+}
+
+// UpdateFingerboardSession
+func UpdateFingerboardSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	docRef := GetCollectionByName(client, FingerboardCollection).Doc(id)
+	if _, err := docRef.Get(ctx); err != nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	var input FingerboardSessionInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid body", http.StatusBadRequest)
+		return
+	}
+
+	updates := []firestore.Update{
+		{Path: "date", Value: input.Date},
+		{Path: "location", Value: input.Location},
+		{Path: "exercises", Value: input.Exercises},
+		{Path: "updatedAt", Value: time.Now()},
+	}
+	if _, err := docRef.Update(ctx, updates); err != nil {
+		http.Error(w, "Update failed", http.StatusInternalServerError)
+		return
+	}
+	GetFingerboardSession(w, r, client, id)
+}
+
+// DeleteFingerboardSession
+func DeleteFingerboardSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	docRef := GetCollectionByName(client, FingerboardCollection).Doc(id)
+	if _, err := docRef.Delete(ctx); err != nil {
+		http.Error(w, "Delete failed", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// ParseCompetitionSessionID
+func ParseCompetitionSessionID(path string) string {
+	parts := strings.Split(strings.TrimPrefix(path, "/"), "/")
+	if len(parts) >= 2 && parts[0] == "competition_sessions" {
+		return parts[1]
+	}
+	return ""
+}
+
+// ListCompetitionSessions
+func ListCompetitionSessions(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
+	ctx := context.Background()
+	col := GetCollectionByName(client, CompetitionCollection)
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+	query := col.OrderBy("date", firestore.Desc)
+	if startDate != "" {
+		query = query.Where("date", ">=", startDate)
+	}
+	if endDate != "" {
+		query = query.Where("date", "<=", endDate)
+	}
+
+	iter := query.Documents(ctx)
+	defer iter.Stop()
+	var sessions []CompetitionSession
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			http.Error(w, "Failed to fetch", http.StatusInternalServerError)
+			return
+		}
+		var s CompetitionSession
+		if err := doc.DataTo(&s); err == nil {
+			s.ID = doc.Ref.ID
+			sessions = append(sessions, s)
+		}
+	}
+	if sessions == nil {
+		sessions = []CompetitionSession{}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sessions)
+}
+
+// GetCompetitionSession
+func GetCompetitionSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	doc, err := GetCollectionByName(client, CompetitionCollection).Doc(id).Get(ctx)
+	if err != nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+	var s CompetitionSession
+	if err := doc.DataTo(&s); err != nil {
+		http.Error(w, "Parse error", http.StatusInternalServerError)
+		return
+	}
+	s.ID = doc.Ref.ID
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(s)
+}
+
+// CreateCompetitionSession
+func CreateCompetitionSession(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
+	ctx := context.Background()
+	var input CompetitionSessionInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid body", http.StatusBadRequest)
+		return
+	}
+
+	now := time.Now()
+	s := CompetitionSession{
+		Date: input.Date, Venue: input.Venue, CustomVenue: input.CustomVenue, Type: input.Type,
+		FingerLoad: input.FingerLoad, ShoulderLoad: input.ShoulderLoad, ForearmLoad: input.ForearmLoad,
+		Rounds: input.Rounds, CreatedAt: now, UpdatedAt: now,
+	}
+	docRef, _, err := GetCollectionByName(client, CompetitionCollection).Add(ctx, s)
+	if err != nil {
+		http.Error(w, "Failed to create", http.StatusInternalServerError)
+		return
+	}
+	s.ID = docRef.ID
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(s)
+}
+
+// UpdateCompetitionSession
+func UpdateCompetitionSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	docRef := GetCollectionByName(client, CompetitionCollection).Doc(id)
+	if _, err := docRef.Get(ctx); err != nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	var input CompetitionSessionInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid body", http.StatusBadRequest)
+		return
+	}
+
+	updates := []firestore.Update{
+		{Path: "date", Value: input.Date},
+		{Path: "venue", Value: input.Venue},
+		{Path: "customVenue", Value: input.CustomVenue},
+		{Path: "type", Value: input.Type},
+		{Path: "fingerLoad", Value: input.FingerLoad},
+		{Path: "shoulderLoad", Value: input.ShoulderLoad},
+		{Path: "forearmLoad", Value: input.ForearmLoad},
+		{Path: "rounds", Value: input.Rounds},
+		{Path: "updatedAt", Value: time.Now()},
+	}
+	if _, err := docRef.Update(ctx, updates); err != nil {
+		http.Error(w, "Update failed", http.StatusInternalServerError)
+		return
+	}
+	GetCompetitionSession(w, r, client, id)
+}
+
+// DeleteCompetitionSession
+func DeleteCompetitionSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	docRef := GetCollectionByName(client, CompetitionCollection).Doc(id)
+	if _, err := docRef.Delete(ctx); err != nil {
+		http.Error(w, "Delete failed", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}

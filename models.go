@@ -89,3 +89,74 @@ type OutdoorSessionInput struct {
 	ForearmLoad    int          `json:"forearmLoad"`
 	Climbs         []ClimbEntry `json:"climbs"`
 }
+
+// Fingerboard Exercise Details
+type ExerciseSet struct {
+	Weight float64 `json:"weight" firestore:"weight"`
+	Reps   int     `json:"reps" firestore:"reps"`
+}
+
+type FingerboardExercise struct {
+	ID       string        `json:"id" firestore:"id"`
+	Name     string        `json:"name" firestore:"name"`
+	GripType string        `json:"gripType" firestore:"gripType"`
+	Sets     int           `json:"sets" firestore:"sets"`
+	Details  []ExerciseSet `json:"details" firestore:"details"`
+	Notes    string        `json:"notes" firestore:"notes"`
+}
+
+// Fingerboard Session
+type FingerboardSession struct {
+	ID        string                `json:"id" firestore:"-"`
+	Date      string                `json:"date" firestore:"date"`
+	Location  string                `json:"location" firestore:"location"` // Usually "N/A" or "Home"
+	Exercises []FingerboardExercise `json:"exercises" firestore:"exercises"`
+	CreatedAt time.Time             `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt time.Time             `json:"updatedAt" firestore:"updatedAt"`
+}
+
+type FingerboardSessionInput struct {
+	Date      string                `json:"date"`
+	Location  string                `json:"location"`
+	Exercises []FingerboardExercise `json:"exercises"`
+}
+
+// Competition Data
+type CompetitionRound struct {
+	Name     string                   `json:"name" firestore:"name"` // Qualifiers, Finals, etc.
+	Position *int                     `json:"position,omitempty" firestore:"position,omitempty"`
+	Climbs   []CompetitionClimbResult `json:"climbs,omitempty" firestore:"climbs,omitempty"`
+}
+
+type CompetitionClimbResult struct {
+	Name         string `json:"name" firestore:"name"`     // Problem #
+	Status       string `json:"status" firestore:"status"` // Flash, Top, Zone, Attempt
+	AttemptCount int    `json:"attemptCount" firestore:"attemptCount"`
+	Notes        string `json:"notes" firestore:"notes"`
+}
+
+// Competition Session
+type CompetitionSession struct {
+	ID           string             `json:"id" firestore:"-"`
+	Date         string             `json:"date" firestore:"date"`
+	Venue        string             `json:"venue" firestore:"venue"`
+	CustomVenue  string             `json:"customVenue,omitempty" firestore:"customVenue,omitempty"`
+	Type         string             `json:"type" firestore:"type"` // Bouldering, Lead, Speed
+	FingerLoad   int                `json:"fingerLoad,omitempty" firestore:"fingerLoad,omitempty"`
+	ShoulderLoad int                `json:"shoulderLoad,omitempty" firestore:"shoulderLoad,omitempty"`
+	ForearmLoad  int                `json:"forearmLoad,omitempty" firestore:"forearmLoad,omitempty"`
+	Rounds       []CompetitionRound `json:"rounds" firestore:"rounds"`
+	CreatedAt    time.Time          `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt    time.Time          `json:"updatedAt" firestore:"updatedAt"`
+}
+
+type CompetitionSessionInput struct {
+	Date         string             `json:"date"`
+	Venue        string             `json:"venue"`
+	CustomVenue  string             `json:"customVenue,omitempty"`
+	Type         string             `json:"type"`
+	FingerLoad   int                `json:"fingerLoad,omitempty"`
+	ShoulderLoad int                `json:"shoulderLoad,omitempty"`
+	ForearmLoad  int                `json:"forearmLoad,omitempty"`
+	Rounds       []CompetitionRound `json:"rounds"`
+}
