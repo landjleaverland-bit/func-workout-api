@@ -140,6 +140,27 @@ func WorkoutAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// /gym_sessions routes
+	if strings.HasPrefix(path, "/gym_sessions") {
+		sessionID := ParseGymSessionID(path)
+
+		switch {
+		case method == "GET" && sessionID == "":
+			ListGymSessions(w, r, client)
+		case method == "GET" && sessionID != "":
+			GetGymSession(w, r, client, sessionID)
+		case method == "POST" && sessionID == "":
+			CreateGymSession(w, r, client)
+		case method == "PUT" && sessionID != "":
+			UpdateGymSession(w, r, client, sessionID)
+		case method == "DELETE" && sessionID != "":
+			DeleteGymSession(w, r, client, sessionID)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		return
+	}
+
 	// Default: not found
 	http.Error(w, "Not found", http.StatusNotFound)
 }

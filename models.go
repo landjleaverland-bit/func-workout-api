@@ -180,3 +180,38 @@ type CompetitionSessionInput struct {
 	ForearmLoad  int                `json:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds"`
 }
+
+// Gym Session Data
+type GymSet struct {
+	Weight    float64 `json:"weight" firestore:"weight"`
+	Reps      int     `json:"reps" firestore:"reps"`
+	IsWarmup  bool    `json:"isWarmup" firestore:"isWarmup"`
+	IsFailure bool    `json:"isFailure" firestore:"isFailure"`
+	IsDropSet bool    `json:"isDropSet" firestore:"isDropSet"`
+	Completed bool    `json:"completed" firestore:"completed"`
+}
+
+type GymExercise struct {
+	ID       string   `json:"id" firestore:"id"`
+	Name     string   `json:"name" firestore:"name"`
+	Sets     []GymSet `json:"sets" firestore:"sets"`
+	Notes    string   `json:"notes,omitempty" firestore:"notes,omitempty"`
+	LinkedTo string   `json:"linkedTo,omitempty" firestore:"linkedTo,omitempty"`
+}
+
+type GymSession struct {
+	ID         string        `json:"id" firestore:"-"`
+	Date       string        `json:"date" firestore:"date"`
+	Name       string        `json:"name" firestore:"name"` // e.g. "Leg Day"
+	Bodyweight float64       `json:"bodyweight,omitempty" firestore:"bodyweight,omitempty"`
+	Exercises  []GymExercise `json:"exercises" firestore:"exercises"`
+	CreatedAt  time.Time     `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt  time.Time     `json:"updatedAt" firestore:"updatedAt"`
+}
+
+type GymSessionInput struct {
+	Date       string        `json:"date"`
+	Name       string        `json:"name"`
+	Bodyweight float64       `json:"bodyweight,omitempty"`
+	Exercises  []GymExercise `json:"exercises"`
+}

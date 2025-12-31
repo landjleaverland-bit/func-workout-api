@@ -656,3 +656,133 @@ func DeleteCompetitionSession(w http.ResponseWriter, r *http.Request, client *fi
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// ParseGymSessionID wrapper
+func ParseGymSessionID(path string) string {
+	parts := strings.Split(strings.TrimPrefix(path, "/"), "/")
+	if len(parts) >= 2 && parts[0] == "gym_sessions" {
+		return parts[1]
+	}
+	return ""
+}
+
+// ListGymSessions
+func ListGymSessions(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
+	ctx := context.Background()
+	col := GetCollectionByName(client, GymCollection)
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+	query := col.OrderBy("date", firestore.Desc)
+	if startDate != "" {
+		query = query.Where("date", ">=", startDate)
+	}
+	if endDate != "" {
+		query = query.Where("date", "<=", endDate)
+	}
+
+	iter := query.Documents(ctx)
+	defer iter.Stop()
+	var sessions []GymSession
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			http.Error(w, "Failed to fetch", http.StatusInternalServerError)
+			return
+		}
+		var s GymSession
+		if err := doc.DataTo(&s); err == nil {
+			s.ID = doc.Ref.ID
+			sessions = append(sessions, s)
+		}
+	}
+	if sessions == nil {
+		sessions = []GymSession{}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sessions)
+}
+
+// GetGymSession
+func GetGymSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	doc, err := GetCollectionByName(client, GymCollection).Doc(id).Get(ctx)
+	if err != nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+	var s GymSession
+	if err := doc.DataTo(&s); err != nil {
+		http.Error(w, "Parse error", http.StatusInternalServerError)
+		return
+	}
+	s.ID = doc.Ref.ID
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(s)
+}
+
+// CreateGymSession
+func CreateGymSession(w http.ResponseWriter, r *http.Request, client *firestore.Client) {
+	ctx := context.Background()
+	var input GymSessionInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid body", http.StatusBadRequest)
+		return
+	}
+
+	now := time.Now()
+	s := GymSession{
+		Date: input.Date, Name: input.Name, Bodyweight: input.Bodyweight, Exercises: input.Exercises, CreatedAt: now, UpdatedAt: now,
+	}
+	docRef, _, err := GetCollectionByName(client, GymCollection).Add(ctx, s)
+	if err != nil {
+		http.Error(w, "Failed to create", http.StatusInternalServerError)
+		return
+	}
+	s.ID = docRef.ID
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(s)
+}
+
+// UpdateGymSession
+func UpdateGymSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	docRef := GetCollectionByName(client, GymCollection).Doc(id)
+	if _, err := docRef.Get(ctx); err != nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	var input GymSessionInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, "Invalid body", http.StatusBadRequest)
+		return
+	}
+
+	updates := []firestore.Update{
+		{Path: "date", Value: input.Date},
+		{Path: "name", Value: input.Name},
+		{Path: "bodyweight", Value: input.Bodyweight},
+		{Path: "exercises", Value: input.Exercises},
+		{Path: "updatedAt", Value: time.Now()},
+	}
+	if _, err := docRef.Update(ctx, updates); err != nil {
+		http.Error(w, "Update failed", http.StatusInternalServerError)
+		return
+	}
+	GetGymSession(w, r, client, id)
+}
+
+// DeleteGymSession
+func DeleteGymSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
+	ctx := context.Background()
+	docRef := GetCollectionByName(client, GymCollection).Doc(id)
+	if _, err := docRef.Delete(ctx); err != nil {
+		http.Error(w, "Delete failed", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}

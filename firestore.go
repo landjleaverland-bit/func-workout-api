@@ -16,6 +16,7 @@ const (
 	OutdoorCollection     = "Outdoor_Climbs"
 	FingerboardCollection = "Fingerboarding"
 	CompetitionCollection = "Competitions"
+	GymCollection         = "Gym_Sessions"
 )
 
 var (
