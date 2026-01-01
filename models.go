@@ -203,15 +203,17 @@ type GymSession struct {
 	ID         string        `json:"id" firestore:"-"`
 	Date       string        `json:"date" firestore:"date"`
 	Name       string        `json:"name" firestore:"name"` // e.g. "Leg Day"
-	Bodyweight float64       `json:"bodyweight,omitempty" firestore:"bodyweight,omitempty"`
-	Exercises  []GymExercise `json:"exercises" firestore:"exercises"`
-	CreatedAt  time.Time     `json:"createdAt" firestore:"createdAt"`
-	UpdatedAt  time.Time     `json:"updatedAt" firestore:"updatedAt"`
+	Bodyweight    float64       `json:"bodyweight,omitempty" firestore:"bodyweight,omitempty"`
+	TrainingBlock string        `json:"trainingBlock,omitempty" firestore:"trainingBlock,omitempty"`
+	Exercises     []GymExercise `json:"exercises" firestore:"exercises"`
+	CreatedAt     time.Time     `json:"createdAt" firestore:"createdAt"`
+	UpdatedAt     time.Time     `json:"updatedAt" firestore:"updatedAt"`
 }
 
 type GymSessionInput struct {
-	Date       string        `json:"date"`
-	Name       string        `json:"name"`
-	Bodyweight float64       `json:"bodyweight,omitempty"`
-	Exercises  []GymExercise `json:"exercises"`
+	Date          string        `json:"date"`
+	Name          string        `json:"name"`
+	Bodyweight    float64       `json:"bodyweight,omitempty"`
+	TrainingBlock string        `json:"trainingBlock,omitempty"`
+	Exercises     []GymExercise `json:"exercises"`
 }

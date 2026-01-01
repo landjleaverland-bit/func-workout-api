@@ -734,7 +734,7 @@ func CreateGymSession(w http.ResponseWriter, r *http.Request, client *firestore.
 
 	now := time.Now()
 	s := GymSession{
-		Date: input.Date, Name: input.Name, Bodyweight: input.Bodyweight, Exercises: input.Exercises, CreatedAt: now, UpdatedAt: now,
+		Date: input.Date, Name: input.Name, Bodyweight: input.Bodyweight, TrainingBlock: input.TrainingBlock, Exercises: input.Exercises, CreatedAt: now, UpdatedAt: now,
 	}
 	docRef, _, err := GetCollectionByName(client, GymCollection).Add(ctx, s)
 	if err != nil {
@@ -766,6 +766,7 @@ func UpdateGymSession(w http.ResponseWriter, r *http.Request, client *firestore.
 		{Path: "date", Value: input.Date},
 		{Path: "name", Value: input.Name},
 		{Path: "bodyweight", Value: input.Bodyweight},
+		{Path: "trainingBlock", Value: input.TrainingBlock},
 		{Path: "exercises", Value: input.Exercises},
 		{Path: "updatedAt", Value: time.Now()},
 	}
