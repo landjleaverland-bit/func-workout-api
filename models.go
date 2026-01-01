@@ -166,6 +166,7 @@ type CompetitionSession struct {
 	ShoulderLoad int                `json:"shoulderLoad,omitempty" firestore:"shoulderLoad,omitempty"`
 	ForearmLoad  int                `json:"forearmLoad,omitempty" firestore:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds" firestore:"rounds"`
+	IsSimulation bool               `json:"isSimulation,omitempty" firestore:"isSimulation,omitempty"`
 	CreatedAt    time.Time          `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt    time.Time          `json:"updatedAt" firestore:"updatedAt"`
 }
@@ -179,6 +180,7 @@ type CompetitionSessionInput struct {
 	ShoulderLoad int                `json:"shoulderLoad,omitempty"`
 	ForearmLoad  int                `json:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds"`
+	IsSimulation bool               `json:"isSimulation,omitempty"`
 }
 
 // Gym Session Data
@@ -192,17 +194,18 @@ type GymSet struct {
 }
 
 type GymExercise struct {
-	ID       string   `json:"id" firestore:"id"`
-	Name     string   `json:"name" firestore:"name"`
-	Sets     []GymSet `json:"sets" firestore:"sets"`
-	Notes    string   `json:"notes,omitempty" firestore:"notes,omitempty"`
-	LinkedTo string   `json:"linkedTo,omitempty" firestore:"linkedTo,omitempty"`
+	ID         string   `json:"id" firestore:"id"`
+	Name       string   `json:"name" firestore:"name"`
+	Sets       []GymSet `json:"sets" firestore:"sets"`
+	Notes      string   `json:"notes,omitempty" firestore:"notes,omitempty"`
+	LinkedTo   string   `json:"linkedTo,omitempty" firestore:"linkedTo,omitempty"`
+	Difficulty string   `json:"difficulty,omitempty" firestore:"difficulty,omitempty"`
 }
 
 type GymSession struct {
-	ID         string        `json:"id" firestore:"-"`
-	Date       string        `json:"date" firestore:"date"`
-	Name       string        `json:"name" firestore:"name"` // e.g. "Leg Day"
+	ID            string        `json:"id" firestore:"-"`
+	Date          string        `json:"date" firestore:"date"`
+	Name          string        `json:"name" firestore:"name"` // e.g. "Leg Day"
 	Bodyweight    float64       `json:"bodyweight,omitempty" firestore:"bodyweight,omitempty"`
 	TrainingBlock string        `json:"trainingBlock,omitempty" firestore:"trainingBlock,omitempty"`
 	Exercises     []GymExercise `json:"exercises" firestore:"exercises"`
