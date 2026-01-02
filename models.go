@@ -167,7 +167,6 @@ type CompetitionSession struct {
 	ShoulderLoad int                `json:"shoulderLoad,omitempty" firestore:"shoulderLoad,omitempty"`
 	ForearmLoad  int                `json:"forearmLoad,omitempty" firestore:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds" firestore:"rounds"`
-	IsSimulation bool               `json:"isSimulation,omitempty" firestore:"isSimulation,omitempty"`
 	CreatedAt    time.Time          `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt    time.Time          `json:"updatedAt" firestore:"updatedAt"`
 }
@@ -181,7 +180,6 @@ type CompetitionSessionInput struct {
 	ShoulderLoad int                `json:"shoulderLoad,omitempty"`
 	ForearmLoad  int                `json:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds"`
-	IsSimulation bool               `json:"isSimulation,omitempty"`
 }
 
 // Gym Session Data

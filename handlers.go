@@ -598,7 +598,7 @@ func CreateCompetitionSession(w http.ResponseWriter, r *http.Request, client *fi
 	s := CompetitionSession{
 		Date: input.Date, Venue: input.Venue, CustomVenue: input.CustomVenue, Type: input.Type,
 		FingerLoad: input.FingerLoad, ShoulderLoad: input.ShoulderLoad, ForearmLoad: input.ForearmLoad,
-		Rounds: input.Rounds, IsSimulation: input.IsSimulation, CreatedAt: now, UpdatedAt: now,
+		Rounds: input.Rounds, CreatedAt: now, UpdatedAt: now,
 	}
 	docRef, _, err := GetCollectionByName(client, CompetitionCollection).Add(ctx, s)
 	if err != nil {
@@ -635,7 +635,6 @@ func UpdateCompetitionSession(w http.ResponseWriter, r *http.Request, client *fi
 		{Path: "shoulderLoad", Value: input.ShoulderLoad},
 		{Path: "forearmLoad", Value: input.ForearmLoad},
 		{Path: "rounds", Value: input.Rounds},
-		{Path: "isSimulation", Value: input.IsSimulation},
 		{Path: "updatedAt", Value: time.Now()},
 	}
 	if _, err := docRef.Update(ctx, updates); err != nil {
