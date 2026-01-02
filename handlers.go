@@ -151,7 +151,7 @@ func UpdateIndoorSession(w http.ResponseWriter, r *http.Request, client *firesto
 		{Path: "difficulty", Value: input.Difficulty},
 		{Path: "categories", Value: input.Categories},
 		{Path: "energySystems", Value: input.EnergySystems},
-		{Path: "techniqueFocuses", Value: input.TechniqueFocuses},
+
 		{Path: "wallAngles", Value: input.WallAngles},
 		{Path: "fingerLoad", Value: input.FingerLoad},
 		{Path: "shoulderLoad", Value: input.ShoulderLoad},
@@ -510,6 +510,12 @@ func UpdateFingerboardSession(w http.ResponseWriter, r *http.Request, client *fi
 func DeleteFingerboardSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
 	ctx := context.Background()
 	docRef := GetCollectionByName(client, FingerboardCollection).Doc(id)
+
+	if _, err := docRef.Get(ctx); err != nil {
+		http.Error(w, "Session not found", http.StatusNotFound)
+		return
+	}
+
 	if _, err := docRef.Delete(ctx); err != nil {
 		http.Error(w, "Delete failed", http.StatusInternalServerError)
 		return
@@ -646,6 +652,12 @@ func UpdateCompetitionSession(w http.ResponseWriter, r *http.Request, client *fi
 func DeleteCompetitionSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
 	ctx := context.Background()
 	docRef := GetCollectionByName(client, CompetitionCollection).Doc(id)
+
+	if _, err := docRef.Get(ctx); err != nil {
+		http.Error(w, "Session not found", http.StatusNotFound)
+		return
+	}
+
 	if _, err := docRef.Delete(ctx); err != nil {
 		http.Error(w, "Delete failed", http.StatusInternalServerError)
 		return
@@ -777,6 +789,12 @@ func UpdateGymSession(w http.ResponseWriter, r *http.Request, client *firestore.
 func DeleteGymSession(w http.ResponseWriter, r *http.Request, client *firestore.Client, id string) {
 	ctx := context.Background()
 	docRef := GetCollectionByName(client, GymCollection).Doc(id)
+
+	if _, err := docRef.Get(ctx); err != nil {
+		http.Error(w, "Session not found", http.StatusNotFound)
+		return
+	}
+
 	if _, err := docRef.Delete(ctx); err != nil {
 		http.Error(w, "Delete failed", http.StatusInternalServerError)
 		return
