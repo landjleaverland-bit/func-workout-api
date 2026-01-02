@@ -25,6 +25,7 @@ type IndoorSession struct {
 	Categories       []string `json:"categories,omitempty" firestore:"categories,omitempty"`
 	EnergySystems    []string `json:"energySystems,omitempty" firestore:"energySystems,omitempty"`
 	TechniqueFocuses []string `json:"techniqueFocuses,omitempty" firestore:"techniqueFocuses,omitempty"`
+	WallAngles       []string `json:"wallAngles,omitempty" firestore:"wallAngles,omitempty"`
 	// WallAngles removed - now per climb
 	FingerLoad   int          `json:"fingerLoad" firestore:"fingerLoad"`
 	ShoulderLoad int          `json:"shouldLoad" firestore:"shouldLoad"`
@@ -50,6 +51,7 @@ type IndoorSessionInput struct {
 	Categories       []string `json:"categories,omitempty"`
 	EnergySystems    []string `json:"energySystems,omitempty"`
 	TechniqueFocuses []string `json:"techniqueFocuses,omitempty"`
+	WallAngles       []string `json:"wallAngles,omitempty"`
 	// WallAngles removed
 	FingerLoad   int          `json:"fingerLoad"`
 	ShoulderLoad int          `json:"shoulderLoad"`
