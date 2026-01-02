@@ -106,6 +106,7 @@ func CreateIndoorSession(w http.ResponseWriter, r *http.Request, client *firesto
 		ShoulderLoad:   input.ShoulderLoad,
 		ForearmLoad:    input.ForearmLoad,
 		Climbs:         input.Climbs,
+		Notes:          input.Notes,
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
@@ -157,6 +158,7 @@ func UpdateIndoorSession(w http.ResponseWriter, r *http.Request, client *firesto
 		{Path: "shoulderLoad", Value: input.ShoulderLoad},
 		{Path: "forearmLoad", Value: input.ForearmLoad},
 		{Path: "climbs", Value: input.Climbs},
+		{Path: "notes", Value: input.Notes},
 		{Path: "updatedAt", Value: time.Now()},
 	}
 
@@ -304,6 +306,7 @@ func CreateOutdoorSession(w http.ResponseWriter, r *http.Request, client *firest
 		ShoulderLoad:  input.ShoulderLoad,
 		ForearmLoad:   input.ForearmLoad,
 		Climbs:        input.Climbs,
+		Notes:         input.Notes,
 		CreatedAt:     now,
 		UpdatedAt:     now,
 	}
@@ -353,6 +356,7 @@ func UpdateOutdoorSession(w http.ResponseWriter, r *http.Request, client *firest
 		{Path: "shoulderLoad", Value: input.ShoulderLoad},
 		{Path: "forearmLoad", Value: input.ForearmLoad},
 		{Path: "climbs", Value: input.Climbs},
+		{Path: "notes", Value: input.Notes},
 		{Path: "updatedAt", Value: time.Now()},
 	}
 
@@ -602,7 +606,7 @@ func CreateCompetitionSession(w http.ResponseWriter, r *http.Request, client *fi
 	s := CompetitionSession{
 		Date: input.Date, Venue: input.Venue, CustomVenue: input.CustomVenue, Type: input.Type,
 		FingerLoad: input.FingerLoad, ShoulderLoad: input.ShoulderLoad, ForearmLoad: input.ForearmLoad,
-		Rounds: input.Rounds, CreatedAt: now, UpdatedAt: now,
+		Rounds: input.Rounds, Notes: input.Notes, CreatedAt: now, UpdatedAt: now,
 	}
 	docRef, _, err := GetCollectionByName(client, CompetitionCollection).Add(ctx, s)
 	if err != nil {
@@ -639,6 +643,7 @@ func UpdateCompetitionSession(w http.ResponseWriter, r *http.Request, client *fi
 		{Path: "shoulderLoad", Value: input.ShoulderLoad},
 		{Path: "forearmLoad", Value: input.ForearmLoad},
 		{Path: "rounds", Value: input.Rounds},
+		{Path: "notes", Value: input.Notes},
 		{Path: "updatedAt", Value: time.Now()},
 	}
 	if _, err := docRef.Update(ctx, updates); err != nil {

@@ -36,6 +36,7 @@ type IndoorSession struct {
 	SloperGrip   int          `json:"sloperGrip" firestore:"sloperGrip"`
 	JugGrip      int          `json:"jugGrip" firestore:"jugGrip"`
 	Climbs       []ClimbEntry `json:"climbs" firestore:"climbs"`
+	Notes        string       `json:"notes,omitempty" firestore:"notes,omitempty"`
 	CreatedAt    time.Time    `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt    time.Time    `json:"updatedAt" firestore:"updatedAt"`
 }
@@ -61,6 +62,7 @@ type IndoorSessionInput struct {
 	SloperGrip   int          `json:"sloperGrip"`
 	JugGrip      int          `json:"jugGrip"`
 	Climbs       []ClimbEntry `json:"climbs"`
+	Notes        string       `json:"notes,omitempty"`
 }
 
 // OutdoorSession represents an outdoor climbing session
@@ -84,6 +86,7 @@ type OutdoorSession struct {
 	SloperGrip    int          `json:"sloperGrip" firestore:"sloperGrip"`
 	JugGrip       int          `json:"jugGrip" firestore:"jugGrip"`
 	Climbs        []ClimbEntry `json:"climbs" firestore:"climbs"`
+	Notes         string       `json:"notes,omitempty" firestore:"notes,omitempty"`
 	CreatedAt     time.Time    `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt     time.Time    `json:"updatedAt" firestore:"updatedAt"`
 }
@@ -108,6 +111,7 @@ type OutdoorSessionInput struct {
 	SloperGrip    int          `json:"sloperGrip"`
 	JugGrip       int          `json:"jugGrip"`
 	Climbs        []ClimbEntry `json:"climbs"`
+	Notes         string       `json:"notes,omitempty"`
 }
 
 // Fingerboard Exercise Details
@@ -166,6 +170,7 @@ type CompetitionSession struct {
 	ShoulderLoad int                `json:"shoulderLoad,omitempty" firestore:"shoulderLoad,omitempty"`
 	ForearmLoad  int                `json:"forearmLoad,omitempty" firestore:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds" firestore:"rounds"`
+	Notes        string             `json:"notes,omitempty" firestore:"notes,omitempty"`
 	CreatedAt    time.Time          `json:"createdAt" firestore:"createdAt"`
 	UpdatedAt    time.Time          `json:"updatedAt" firestore:"updatedAt"`
 }
@@ -179,6 +184,7 @@ type CompetitionSessionInput struct {
 	ShoulderLoad int                `json:"shoulderLoad,omitempty"`
 	ForearmLoad  int                `json:"forearmLoad,omitempty"`
 	Rounds       []CompetitionRound `json:"rounds"`
+	Notes        string             `json:"notes,omitempty"`
 }
 
 // Gym Session Data
