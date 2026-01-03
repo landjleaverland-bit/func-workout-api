@@ -28,7 +28,7 @@ type IndoorSession struct {
 	WallAngles     []string `json:"wallAngles,omitempty" firestore:"wallAngles,omitempty"`
 	// WallAngles removed - now per climb
 	FingerLoad   int          `json:"fingerLoad" firestore:"fingerLoad"`
-	ShoulderLoad int          `json:"shouldLoad" firestore:"shouldLoad"`
+	ShoulderLoad int          `json:"shoulderLoad" firestore:"shoulderLoad"`
 	ForearmLoad  int          `json:"forearmLoad" firestore:"forearmLoad"`
 	OpenGrip     int          `json:"openGrip" firestore:"openGrip"`
 	CrimpGrip    int          `json:"crimpGrip" firestore:"crimpGrip"`
