@@ -16,17 +16,28 @@ func ListIndoorSessions(w http.ResponseWriter, r *http.Request, client *firestor
 	ctx := context.Background()
 	col := GetCollection(client)
 
-	// Optional date range filters
-	startDate := r.URL.Query().Get("startDate")
-	endDate := r.URL.Query().Get("endDate")
+	var query firestore.Query
 
-	query := col.OrderBy("date", firestore.Desc)
+	// Check for incremental sync
+	since := r.URL.Query().Get("since")
+	parsedTime, err := time.Parse(time.RFC3339, since)
 
-	if startDate != "" {
-		query = query.Where("date", ">=", startDate)
-	}
-	if endDate != "" {
-		query = query.Where("date", "<=", endDate)
+	if since != "" && err == nil {
+		// Incremental sync - strictly filter by modification time
+		query = col.Where("updatedAt", ">", parsedTime).OrderBy("updatedAt", firestore.Desc)
+	} else {
+		// Standard sync - filter by date
+		startDate := r.URL.Query().Get("startDate")
+		endDate := r.URL.Query().Get("endDate")
+
+		query = col.OrderBy("date", firestore.Desc)
+
+		if startDate != "" {
+			query = query.Where("date", ">=", startDate)
+		}
+		if endDate != "" {
+			query = query.Where("date", "<=", endDate)
+		}
 	}
 
 	iter := query.Documents(ctx)
@@ -216,16 +227,26 @@ func ListOutdoorSessions(w http.ResponseWriter, r *http.Request, client *firesto
 	ctx := context.Background()
 	col := GetCollectionByName(client, OutdoorCollection)
 
-	startDate := r.URL.Query().Get("startDate")
-	endDate := r.URL.Query().Get("endDate")
+	var query firestore.Query
 
-	query := col.OrderBy("date", firestore.Desc)
+	// Check for incremental sync
+	since := r.URL.Query().Get("since")
+	parsedTime, err := time.Parse(time.RFC3339, since)
 
-	if startDate != "" {
-		query = query.Where("date", ">=", startDate)
-	}
-	if endDate != "" {
-		query = query.Where("date", "<=", endDate)
+	if since != "" && err == nil {
+		query = col.Where("updatedAt", ">", parsedTime).OrderBy("updatedAt", firestore.Desc)
+	} else {
+		startDate := r.URL.Query().Get("startDate")
+		endDate := r.URL.Query().Get("endDate")
+
+		query = col.OrderBy("date", firestore.Desc)
+
+		if startDate != "" {
+			query = query.Where("date", ">=", startDate)
+		}
+		if endDate != "" {
+			query = query.Where("date", "<=", endDate)
+		}
 	}
 
 	iter := query.Documents(ctx)
@@ -415,6 +436,15 @@ func ListFingerboardSessions(w http.ResponseWriter, r *http.Request, client *fir
 		query = query.Where("date", "<=", endDate)
 	}
 
+	// Check for incremental sync
+	since := r.URL.Query().Get("since")
+	if since != "" {
+		parsedTime, err := time.Parse(time.RFC3339, since)
+		if err == nil {
+			query = query.Where("updatedAt", ">", parsedTime)
+		}
+	}
+
 	iter := query.Documents(ctx)
 	defer iter.Stop()
 	var sessions []FingerboardSession
@@ -548,6 +578,15 @@ func ListCompetitionSessions(w http.ResponseWriter, r *http.Request, client *fir
 	}
 	if endDate != "" {
 		query = query.Where("date", "<=", endDate)
+	}
+
+	// Check for incremental sync
+	since := r.URL.Query().Get("since")
+	if since != "" {
+		parsedTime, err := time.Parse(time.RFC3339, since)
+		if err == nil {
+			query = query.Where("updatedAt", ">", parsedTime)
+		}
 	}
 
 	iter := query.Documents(ctx)
@@ -691,6 +730,15 @@ func ListGymSessions(w http.ResponseWriter, r *http.Request, client *firestore.C
 	}
 	if endDate != "" {
 		query = query.Where("date", "<=", endDate)
+	}
+
+	// Check for incremental sync
+	since := r.URL.Query().Get("since")
+	if since != "" {
+		parsedTime, err := time.Parse(time.RFC3339, since)
+		if err == nil {
+			query = query.Where("updatedAt", ">", parsedTime)
+		}
 	}
 
 	iter := query.Documents(ctx)
